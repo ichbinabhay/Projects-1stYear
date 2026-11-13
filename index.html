@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VERDANTIA — Botanical Sanctuary & Living Nature Atlas</title>
+  <meta name="description" content="Immerse in Earth's extraordinary botanical kingdoms with an interactive plant encyclopedia, procedural nature soundscapes, virtual terrarium simulator, and intelligent plant care doctor.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function getPlantFallbackSvg(name, category) {
+      const bg = category === 'trees' ? '%23132e22' : (category === 'medicinal' ? '%23261a33' : (category === 'rare' ? '%23331b24' : '%230c2419'));
+      const accent = category === 'trees' ? '%234ade80' : (category === 'medicinal' ? '%23c084fc' : (category === 'rare' ? '%23f472b6' : '%2334d399'));
+      const encodedName = encodeURIComponent(name);
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="${bg}"/><circle cx="400" cy="220" r="140" fill="${accent}" opacity="0.15"/><path d="M400 100 C320 200 300 310 400 370 C500 310 480 200 400 100 Z" fill="${accent}" opacity="0.45"/><path d="M400 120 L400 355 M380 220 L400 190 M420 250 L400 220 M375 280 L400 250" stroke="%23ffffff" stroke-width="4" stroke-linecap="round" opacity="0.6"/><text x="400" y="420" fill="%23ffffff" font-family="system-ui, sans-serif" font-size="24" font-weight="700" text-anchor="middle">${encodedName}</text></svg>`;
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Floating Falling Leaf Particle Canvas -->
+  <canvas id="leaves-canvas"></canvas>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="#hero" class="logo">
+        <div class="logo-leaf-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="brand-name">VERDANTIA</span>
+          <span class="brand-tagline">Botanical & Nature Sanctuary</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#encyclopedia" class="nav-link">Botanical Atlas</a></li>
+          <li><a href="#plant-doctor" class="nav-link">Plant Doctor</a></li>
+          <li><a href="#biomes" class="nav-link">Living Biomes</a></li>
+          <li><a href="#terrarium" class="nav-link">Terrarium Studio</a></li>
+          <li><a href="#conservation" class="nav-link">Conservation</a></li>
+          <li><a href="#stories" class="nav-link">Field Notes</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Saved Collection Button -->
+        <button id="view-saved-btn" class="icon-btn" title="View Saved Botanical Collection" aria-label="View Saved Plants">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span id="saved-plants-badge" class="saved-badge" style="display: none;">0</span>
+        </button>
+
+        <!-- Light/Dark Mode Switcher -->
+        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          ☀️
+        </button>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button id="mobile-menu-toggle" class="icon-btn mobile-menu-btn" title="Open Menu" aria-label="Toggle Mobile Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-content-col">
+        <div class="hero-pill">
+          <span class="pulse-dot"></span>
+          <span>Preserving 390,000+ Earth Flora Species</span>
+        </div>
+        <h1 class="hero-title">
+          Breathe with the <br>
+          <span class="highlight-text">Living Earth</span>
+        </h1>
+        <p class="hero-desc">
+          An interactive odyssey through Earth’s extraordinary botanical kingdoms, living biomes, procedural nature soundscapes, and hands-on plant care. Rediscover your bond with the wild.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#encyclopedia" class="btn btn-primary">
+            <span>🌿</span> Explore Botanical Atlas
+          </a>
+          <a href="#plant-doctor" class="btn btn-secondary">
+            <span>🔬</span> Diagnose a Plant
+          </a>
+          <a href="#terrarium" class="btn btn-secondary">
+            <span>🧪</span> Virtual Terrarium
+          </a>
+        </div>
+        <div class="hero-stats-row">
+          <div class="stat-item">
+            <div class="stat-number">390<span>K+</span></div>
+            <div class="stat-label">Documented Plant Species</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3.04<span>T</span></div>
+            <div class="stat-label">Trees Inhabiting Earth</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">80<span>%</span></div>
+            <div class="stat-label">Terrestrial Biodiversity in Forests</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Showcase Card -->
+      <div class="hero-visual-col">
+        <div class="hero-visual-card">
+          <div class="hero-main-img-wrapper">
+            <img class="hero-main-img" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=900&q=80" alt="Lush Tropical Botanical Canopy" onerror="this.onerror=null; this.src=getPlantFallbackSvg('Tropical Cloud Forest', 'trees');">
+            <div class="hero-img-overlay">
+              <div class="hero-badge-overlay">
+                <span class="badge badge-green">EPITOME OF BOTANY</span>
+                <span style="font-size: 0.8rem; color: #a7f3d0;">Neotropical Realm</span>
+              </div>
+              <h3 class="hero-plant-name">Canopy of the Cloud Forest</h3>
+              <p class="hero-plant-latin">Monteverde, Costa Rica • Elevation 1,440m</p>
+            </div>
+          </div>
+
+          <!-- Floating Badges -->
+          <div class="floating-glass-tag">
+            <div class="floating-icon-circ">💨</div>
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Photosynthesis Engine</div>
+              <div style="font-size: 0.88rem; font-weight: 700; color: var(--accent-light);">28.5L O₂ / Day</div>
+            </div>
+          </div>
+
+          <div class="floating-glass-tag-left">
+            <div class="floating-icon-circ">🌱</div>
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Ecosystem Health</div>
+              <div style="font-size: 0.88rem; font-weight: 700; color: #fbbf24;">Mycelium Connected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real-Time Procedural Nature Soundscape Bar -->
+  <div class="container">
+    <div class="soundscape-bar">
+      <div class="soundscape-header">
+        <div class="soundscape-title-box">
+          <div class="soundscape-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+          </div>
+          <div>
+            <h3 class="soundscape-title">Procedural Nature Soundscape Synthesizer</h3>
+            <p class="soundscape-sub">Pure real-time Web Audio API synthesis • Zero files, 100% offline serenity</p>
+          </div>
+        </div>
+
+        <div class="soundscape-controls">
+          <div class="sound-visualizer" title="Audio Activity Monitor">
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+          </div>
+          <button id="soundscape-play-btn" class="btn btn-primary btn-sm">
+            <span>▶</span> Play Ambient Audio
+          </button>
+        </div>
+      </div>
+
+      <!-- Soundscape Track Sliders -->
+      <div class="soundscape-sliders-grid">
+        <div class="sound-track">
+          <div class="track-info">
+            <span class="track-icon-label"><span>🌧️</span> Rain Shower</span>
+          </div>
+          <input type="range" class="track-slider" id="slider-rain" min="0" max="1" step="0.05" value="0.35" aria-label="Rain Volume">
+        </div>
+
+        <div class="sound-track">
+          <div class="track-info">
+            <span class="track-icon-label"><span>🍃</span> Forest Breeze</span>
+          </div>
+          <input type="range" class="track-slider" id="slider-wind" min="0" max="1" step="0.05" value="0.25" aria-label="Wind Volume">
+        </div>
+
+        <div class="sound-track">
+          <div class="track-info">
+            <span class="track-icon-label"><span>🐦</span> Woodland Birds</span>
+          </div>
+          <input type="range" class="track-slider" id="slider-birds" min="0" max="1" step="0.05" value="0.4" aria-label="Birdsong Volume">
+        </div>
+
+        <div class="sound-track">
+          <div class="track-info">
+            <span class="track-icon-label"><span>💧</span> Mountain Brook</span>
+          </div>
+          <input type="range" class="track-slider" id="slider-stream" min="0" max="1" step="0.05" value="0.3" aria-label="Stream Volume">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plant Explorer / Botanical Encyclopedia -->
+  <section class="section" id="encyclopedia">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">BOTANICAL ATLAS</span>
+        <h2 class="section-title">The Living Plant Kingdom</h2>
+        <p class="section-desc">
+          Search and examine profiles of indoor air purifiers, ancient keystone trees, medicinal herbs, and extraordinary rare carnivorous species.
+        </p>
+      </div>
+
+      <!-- Search & Filters Toolbar -->
+      <div class="encyclopedia-toolbar">
+        <div class="search-box-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="encyclopedia-search" class="search-input" placeholder="Search by common name, Latin binomial, family, or characteristic..." aria-label="Search Plant Atlas">
+        </div>
+
+        <div class="category-filter-row">
+          <button class="filter-chip active" data-cat="all">All Flora</button>
+          <button class="filter-chip" data-cat="indoor">Indoor & Air Purifiers</button>
+          <button class="filter-chip" data-cat="trees">Ancient Keystone Trees</button>
+          <button class="filter-chip" data-cat="medicinal">Medicinal & Aromatic Herbs</button>
+          <button class="filter-chip" data-cat="rare">Rare & Carnivorous</button>
+        </div>
+
+        <div class="filter-meta-bar">
+          <span id="plant-results-count">Displaying 12 botanical species</span>
+          <span>Tip: Click ★ on any card to save to your personal garden</span>
+        </div>
+      </div>
+
+      <!-- Plants Grid -->
+      <div class="plants-grid" id="plants-grid">
+        <!-- Dynamically populated by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Plant Doctor / Symptom Diagnostic Wizard -->
+  <section class="section" id="plant-doctor" style="background: rgba(0, 0, 0, 0.15);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">BOTANICAL DIAGNOSTICS</span>
+        <h2 class="section-title">The Intelligent Plant Doctor</h2>
+        <p class="section-desc">
+          Is your houseplant or garden specimen signaling distress? Follow our 3-step triage to diagnose root causes and receive an actionable botanical prescription.
+        </p>
+      </div>
+
+      <div class="doctor-container">
+        <!-- Step Progress Indicator -->
+        <div class="doctor-steps-indicator">
+          <div class="step-bubble active" data-step-index="1">
+            <span class="step-num">1</span>
+            <span>Plant Variety</span>
+          </div>
+          <div class="step-bubble" data-step-index="2">
+            <span class="step-num">2</span>
+            <span>Visible Symptoms</span>
+          </div>
+          <div class="step-bubble" data-step-index="3">
+            <span class="step-num">3</span>
+            <span>Environment</span>
+          </div>
+          <div class="step-bubble" data-step-index="4">
+            <span class="step-num">4</span>
+            <span>Prescription</span>
+          </div>
+        </div>
+
+        <!-- Wizard Screen 1: Plant Type -->
+        <div class="doctor-wizard-screen active" data-screen="1" data-step="1">
+          <h3 class="doctor-prompt">What kind of plant is in distress?</h3>
+          <div class="option-cards-grid">
+            <button class="diagnostic-option-btn" data-val="foliage">
+              <span class="option-icon">🌿</span>
+              <span class="option-title">Tropical Foliage</span>
+              <span class="option-desc">Monstera, Fiddle Leaf, Pothos, Philodendron, Calathea</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="succulent">
+              <span class="option-icon">🌵</span>
+              <span class="option-title">Succulent or Cactus</span>
+              <span class="option-desc">Aloe, Snake Plant, Jade, Echeveria, Haworthia</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="flowering">
+              <span class="option-icon">🌸</span>
+              <span class="option-title">Flowering / Exotic</span>
+              <span class="option-desc">Peace Lily, Orchid, Anthurium, African Violet</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="herbs">
+              <span class="option-icon">🌱</span>
+              <span class="option-title">Herbs or Ferns</span>
+              <span class="option-desc">Lavender, Mint, Boston Fern, Maidenhair, Basil</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wizard Screen 2: Symptoms -->
+        <div class="doctor-wizard-screen" data-screen="2" data-step="2">
+          <h3 class="doctor-prompt">What primary symptom are you noticing?</h3>
+          <div class="option-cards-grid">
+            <button class="diagnostic-option-btn" data-val="yellowing">
+              <span class="option-icon">🟡</span>
+              <span class="option-title">Yellowing Leaves</span>
+              <span class="option-desc">Lower or middle leaves turning pale yellow or soft</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="brown-crisp">
+              <span class="option-icon">🍂</span>
+              <span class="option-title">Brown, Crispy Tips</span>
+              <span class="option-desc">Crunchy dry margins or curling leaf tips</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="drooping">
+              <span class="option-icon">🥀</span>
+              <span class="option-title">Drooping / Limp Stems</span>
+              <span class="option-desc">Loss of turgor pressure; plant is wilting or sagging</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="white-spots">
+              <span class="option-icon">🔬</span>
+              <span class="option-title">Spots or Fine Webbing</span>
+              <span class="option-desc">White powdery coating, sticky residue, or tiny webs</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="leggy">
+              <span class="option-icon">📏</span>
+              <span class="option-title">Leggy / Stretched Stems</span>
+              <span class="option-desc">Thin pale stems with huge gaps between small leaves</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wizard Screen 3: Environment -->
+        <div class="doctor-wizard-screen" data-screen="3" data-step="3">
+          <h3 class="doctor-prompt">Tell us about the current growing conditions:</h3>
+          <div class="option-cards-grid">
+            <button class="diagnostic-option-btn" data-val="overwater">
+              <span class="option-icon">💧</span>
+              <span class="option-title">Soggy / Heavy Soil</span>
+              <span class="option-desc">Pot has no drainage or soil stays wet for over 2 weeks</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="dry-air">
+              <span class="option-icon">💨</span>
+              <span class="option-title">Dry Air / Central AC</span>
+              <span class="option-desc">Near heating radiator, air vent, or very low humidity</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="infrequent-water">
+              <span class="option-icon">🏜️</span>
+              <span class="option-title">Parched / Bone Dry</span>
+              <span class="option-desc">Soil has shrunk away from pot edges, completely dry</span>
+            </button>
+            <button class="diagnostic-option-btn" data-val="low-light">
+              <span class="option-icon">🌑</span>
+              <span class="option-title">Deep Shade / Dark Corner</span>
+              <span class="option-desc">Far from windows or in a windowless interior room</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wizard Screen 4: Diagnosis Result -->
+        <div class="doctor-wizard-screen" data-screen="4">
+          <div id="diagnosis-result-container">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Living Biomes & Ecosystem Diorama -->
+  <section class="section" id="biomes">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">EARTH HABITATS</span>
+        <h2 class="section-title">Living Biomes & Sanctuaries</h2>
+        <p class="section-desc">
+          Step into Earth's vital ecological biomes. Explore climate profiles, keystones, and interactive adaptation hotspots.
+        </p>
+      </div>
+
+      <!-- Biome Tabs -->
+      <div class="biome-tabs-nav">
+        <button class="biome-tab-btn active" data-biome="amazon">Amazonian Rainforest</button>
+        <button class="biome-tab-btn" data-biome="taiga">Temperate Rainbelt</button>
+        <button class="biome-tab-btn" data-biome="sonoran">Sonoran Desert Oasis</button>
+        <button class="biome-tab-btn" data-biome="alpine">Alpine Tundra</button>
+      </div>
+
+      <!-- Biome Interactive Stage -->
+      <div class="biome-display-stage" id="biome-stage">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Virtual Terrarium Canvas Simulator -->
+  <section class="section" id="terrarium" style="background: rgba(0, 0, 0, 0.2);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">INTERACTIVE BOTANICAL LAB</span>
+        <h2 class="section-title">Virtual Botanical Terrarium</h2>
+        <p class="section-desc">
+          Craft your own flourishing sealed ecosystem. Plant seeds, adjust sunlight, deliver gentle morning mist, and watch your botanical sanctuary grow in real time.
+        </p>
+      </div>
+
+      <div class="terrarium-wrapper">
+        <div class="terrarium-grid">
+          <!-- Canvas Viewport -->
+          <div class="terrarium-canvas-box">
+            <div class="terrarium-floating-status">
+              <span>🔬</span>
+              <span>Click anywhere on soil to plant selected seed</span>
+            </div>
+            <canvas id="terrarium-canvas"></canvas>
+          </div>
+
+          <!-- Controls Side-Panel -->
+          <div class="terrarium-control-panel">
+            <div>
+              <h4 class="panel-group-title">1. Choose Botanical Specimen</h4>
+              <div class="seed-selector-grid">
+                <button class="seed-choice-btn active" data-seed="fern">
+                  <span>🌿</span> Fern
+                </button>
+                <button class="seed-choice-btn" data-seed="succulent">
+                  <span>🌵</span> Succulent
+                </button>
+                <button class="seed-choice-btn" data-seed="mushroom">
+                  <span>🍄</span> Shroom
+                </button>
+                <button class="seed-choice-btn" data-seed="wildflower">
+                  <span>🌼</span> Bloom
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="panel-group-title">2. Climate Controls</h4>
+              <div class="slider-group">
+                <div class="slider-header-flex">
+                  <span style="color: var(--text-secondary);">Sunlight / Day-Night</span>
+                  <span id="sun-value-display" style="font-weight: 700; color: var(--accent-light);">75%</span>
+                </div>
+                <input type="range" class="track-slider" id="terrarium-sun-slider" min="10" max="100" value="75">
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <h4 class="panel-group-title">3. Ecosystem Actions</h4>
+              <button id="terrarium-mist-btn" class="btn btn-primary" style="width: 100%;">
+                <span>🌧️</span> Deliver Rain Mist
+              </button>
+
+              <div class="terrarium-btn-row">
+                <button id="terrarium-reset-btn" class="btn btn-secondary btn-sm" style="flex: 1;">
+                  <span>↺</span> Reseed
+                </button>
+                <button id="terrarium-snap-btn" class="btn btn-amber btn-sm" style="flex: 1;">
+                  <span>📸</span> Snapshot
+                </button>
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.2); padding: 14px; border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+              <strong style="color: var(--accent-light);">Terrarium Stratigraphy:</strong>
+              Coarse gravel base prevents waterlogging, activated charcoal filters impurities, rich organic loam feeds roots, and living moss regulates humidity.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conservation & Daily Action Hub -->
+  <section class="section" id="conservation">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">EARTH REWILDING</span>
+        <h2 class="section-title">Pledge for Our Living Planet</h2>
+        <p class="section-desc">
+          Measure the quantifiable impact of native tree planting and track your daily ecological commitments.
+        </p>
+      </div>
+
+      <div class="conservation-grid">
+        <!-- Tree Carbon Calculator -->
+        <div class="action-card">
+          <div class="badge badge-green" style="margin-bottom: 12px;">IMPACT CALCULATOR</div>
+          <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">Reforestation Biomass Impact</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 24px;">
+            Slide to see the multi-year carbon capture, vehicle emissions offset, and biodiverse habitat generated by planting native trees.
+          </p>
+
+          <div class="carbon-calc-box">
+            <div class="slider-group">
+              <div class="slider-header-flex">
+                <span style="font-weight: 600;">Native Trees Planted:</span>
+                <span id="calc-tree-count" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-light);">25</span>
+              </div>
+              <input type="range" class="track-slider" id="tree-calc-slider" min="1" max="100" value="25" aria-label="Trees planted slider">
+            </div>
+
+            <div class="carbon-result-display">
+              <div class="carbon-kpi-huge" id="calc-co2-val">1,200 lbs</div>
+              <div class="carbon-sub">Annual Atmospheric CO₂ Sequestered</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div style="background: rgba(0,0,0,0.2); padding: 14px; border-radius: var(--radius-md); text-align: center;">
+                <div style="font-size: 1.2rem; font-weight: 700; color: #fbbf24;" id="calc-miles-val">2,880 mi</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Gasoline Car Miles Offset</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 14px; border-radius: var(--radius-md); text-align: center;">
+                <div style="font-size: 1.2rem; font-weight: 700; color: #34d399;" id="calc-habitat-val">375 m²</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Canopy Habitat Created</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Earth Pledge Tracker -->
+        <div class="action-card">
+          <div class="badge badge-amber" style="margin-bottom: 12px;">DAILY HABITS</div>
+          <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">My Daily Earth Pledges</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 16px;">
+            Check off the eco-actions you fulfilled today. Stored securely on your device.
+          </p>
+
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+              <span id="pledge-progress-text">0 of 4 commitments fulfilled</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+              <div id="pledge-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #10b981, #2ecc71); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <div class="pledge-list">
+            <div class="pledge-item" data-pledge-id="pollinator">
+              <input type="checkbox" class="pledge-checkbox" aria-label="Support Pollinators">
+              <div class="pledge-text-group">
+                <span class="pledge-title">Plant / Nurture Pollinator Flora</span>
+                <span class="pledge-impact">+ Supports native bumblebees & monarch butterflies</span>
+              </div>
+            </div>
+
+            <div class="pledge-item" data-pledge-id="water-conserve">
+              <input type="checkbox" class="pledge-checkbox" aria-label="Conserve Water">
+              <div class="pledge-text-group">
+                <span class="pledge-title">Conserve Water & Bottom-Water Houseplants</span>
+                <span class="pledge-impact">+ Prevents surface evaporation and root rot</span>
+              </div>
+            </div>
+
+            <div class="pledge-item" data-pledge-id="compost">
+              <input type="checkbox" class="pledge-checkbox" aria-label="Compost Organics">
+              <div class="pledge-text-group">
+                <span class="pledge-title">Compost Kitchen Scraps & Avoid Synthetic Toxins</span>
+                <span class="pledge-impact">+ Builds microbe-rich humus soil naturally</span>
+              </div>
+            </div>
+
+            <div class="pledge-item" data-pledge-id="nature-walk">
+              <input type="checkbox" class="pledge-checkbox" aria-label="Forest Bathing">
+              <div class="pledge-text-group">
+                <span class="pledge-title">15 Minutes of Mindful Forest Bathing (Shinrin-yoku)</span>
+                <span class="pledge-impact">+ Reduces cortisol, boosts phytoncide immunity</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Botanical Stories & Field Notes -->
+  <section class="section" id="stories" style="background: rgba(0, 0, 0, 0.1);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">BOTANICAL ESSAYS</span>
+        <h2 class="section-title">Field Notes & Natural Wonders</h2>
+        <p class="section-desc">
+          Deep dives into fungal communication networks, mathematical symmetries in flora, and how foliage cleanses modern living spaces.
+        </p>
+      </div>
+
+      <div class="stories-grid">
+        <!-- Story 1 -->
+        <article class="story-card">
+          <div class="story-img-box">
+            <img class="story-img" src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80" alt="Misty Forest Canopy" onerror="this.onerror=null; this.src=getPlantFallbackSvg('Wood Wide Web', 'trees');">
+          </div>
+          <div class="story-body">
+            <div class="story-meta">
+              <span>Ecology</span> • <span>6 min read</span>
+            </div>
+            <h3 class="story-title">The Wood Wide Web: Underground Fungal Networks That Enable Forest Communication</h3>
+            <p class="story-excerpt">
+              How mycorrhizal fungi form a subterranean internet that lets ancient trees share sugars, warn of pest attacks, and nurture vulnerable seedlings across miles of forest floor.
+            </p>
+            <a href="#" class="story-read-link" data-story="wood-wide-web">
+              Read Essay <span>→</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Story 2 -->
+        <article class="story-card">
+          <div class="story-img-box">
+            <img class="story-img" src="https://images.unsplash.com/photo-1508873696983-2df5293cb395?auto=format&fit=crop&w=800&q=80" alt="Botanical Spiral Geometry" onerror="this.onerror=null; this.src=getPlantFallbackSvg('Fibonacci Flora', 'indoor');">
+          </div>
+          <div class="story-body">
+            <div class="story-meta">
+              <span>Biomathematics</span> • <span>5 min read</span>
+            </div>
+            <h3 class="story-title">Nature's Sacred Geometry: The Fibonacci Sequence in Flora & Fronds</h3>
+            <p class="story-excerpt">
+              Uncover why pinecones, sunflower heads, and unfolding fern fiddleheads naturally follow the golden angle of 137.5 degrees to maximize solar capture and seed packing.
+            </p>
+            <a href="#" class="story-read-link" data-story="fibonacci-nature">
+              Read Essay <span>→</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Story 3 -->
+        <article class="story-card">
+          <div class="story-img-box">
+            <img class="story-img" src="https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=800&q=80" alt="Lush Indoor Plants" onerror="this.onerror=null; this.src=getPlantFallbackSvg('Phytoremediation', 'indoor');">
+          </div>
+          <div class="story-body">
+            <div class="story-meta">
+              <span>Environmental Science</span> • <span>4 min read</span>
+            </div>
+            <h3 class="story-title">How Houseplants Cleanse Modern Indoor VOCs: The Science Behind Phytoremediation</h3>
+            <p class="story-excerpt">
+              Discover the microbial mechanics behind NASA's Clean Air Study: how root rhizosphere bacteria and leaf stomata actively break down indoor formaldehyde and benzene.
+            </p>
+            <a href="#" class="story-read-link" data-story="phytoremediation-clean-air">
+              Read Essay <span>→</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div>
+          <div class="logo">
+            <div class="logo-leaf-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+              </svg>
+            </div>
+            <span class="brand-name">VERDANTIA</span>
+          </div>
+          <p class="footer-brand-desc">
+            A botanical sanctuary and digital atlas celebrating the beauty, complexity, and ecological imperative of Earth's flora and living biomes.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Atlas Nav</h4>
+          <ul class="footer-links-list">
+            <li><a href="#encyclopedia" class="footer-link">Botanical Atlas</a></li>
+            <li><a href="#plant-doctor" class="footer-link">Plant Doctor</a></li>
+            <li><a href="#biomes" class="footer-link">Living Biomes</a></li>
+            <li><a href="#terrarium" class="footer-link">Terrarium Studio</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Flora Categories</h4>
+          <ul class="footer-links-list">
+            <li><a href="#encyclopedia" class="footer-link">Air Purifiers</a></li>
+            <li><a href="#encyclopedia" class="footer-link">Ancient Keystone Trees</a></li>
+            <li><a href="#encyclopedia" class="footer-link">Medicinal Herbs</a></li>
+            <li><a href="#encyclopedia" class="footer-link">Carnivorous Flora</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Sanctuary Ethics</h4>
+          <ul class="footer-links-list">
+            <li><a href="#conservation" class="footer-link">Rewilding Initiatives</a></li>
+            <li><a href="#conservation" class="footer-link">Carbon Sequestration</a></li>
+            <li><a href="#stories" class="footer-link">Mycelium Networks</a></li>
+            <li><a href="#stories" class="footer-link">Phytoremediation</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div>© 2026 VERDANTIA Sanctuary. Dedicated to botanical preservation and ecological balance.</div>
+        <div>Engineered with Vanilla HTML5, CSS3 & Web Audio API</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal 1: Botanical Specimen Dossier -->
+  <div id="dossier-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Botanical Specimen Dossier">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-body" id="dossier-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Saved Garden Collection -->
+  <div id="saved-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Saved Botanical Collection">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-body" id="saved-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Botanical Essay Reader -->
+  <div id="story-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Botanical Essay Reader">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-body" id="story-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-notice" class="toast-notice"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
